@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<input type="file" id="uploaded"/>
+<canvas id="myCanvas" width="300" height="300" style="border:1px solid #d3d3d3;">
+    Your browser does not support the HTML5 canvas tag.
+</canvas>
+
+<script src="tips.js"></script>
+<script src="canvas2image.js"></script>
+<script>
+    function getLines(ctx, text, maxWidth) {
+        var words = text.split(" ");
+        var lines = [];
+        var currentLine = words[0];
+
+        for (var i = 1; i < words.length; i++) {
+            var word = words[i];
+            var width = ctx.measureText(currentLine + " " + word).width;
+            if (width < maxWidth) {
+                currentLine += " " + word;
+            } else {
+                lines.push(currentLine);
+                currentLine = word;
+            }
+        }
+        lines.push(currentLine);
+        return lines;
+    }
+</script>
+
+<script>
+    let uploaded = document.getElementById("uploaded");
+    uploaded.onchange = function () {
+        let files = uploaded.files;
+        const canvas = document.getElementById("myCanvas");
+
+        let ctx = canvas.getContext("2d");
+
+
+        for (var index = 0; index < files.length; index++) {
+
+            // get item
+            var file = files[index];
+            var reader = new FileReader();
+
+            reader.readAsText(file);
+
+            let tip = parseFile(reader.result);
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.font = "10px Arial";
+            ctx.fillText(tip.hashtags, 10, 30);
+            getLines(ctx, tip.tip, canvas.width).forEach(function (value, ind) {
+                ctx.fillText(value, 10, 50 + (12 * ind));
+            });
+
+            // save img
+            Canvas2Image.saveAsImage(canvas, 300, 300, 'png');
+
+        }
+    }
+
+
+</script>
+</body>
+</html>
