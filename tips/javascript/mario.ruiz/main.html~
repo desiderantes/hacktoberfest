@@ -35,8 +35,8 @@
 </script>
 
 <script>
-    document.getElementById("uploaded").onchange = function () {
-        let uploaded = document.getElementById("uploaded");
+    let uploaded = document.getElementById("uploaded");
+    uploaded.onchange = function () {
         let files = uploaded.files;
         const canvas = document.getElementById("myCanvas");
 
@@ -61,7 +61,7 @@
             });
 
             // save img
-            Canvas2Image.saveAsPNG(canvas, 300, 300);
+            Canvas2Image.saveAsImage(canvas, 300, 300, 'png');
 
         }
     }
